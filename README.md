@@ -96,6 +96,6 @@ This project is provided for research purposes without warranty. Please read [LI
 
 For questions or collaborations, please contact:
 
-Atharva Kanchan  
-Email: [athatvakanchan959@gmail.com]  
-GitHub: [https://github.com/atharvakanchan25]
+Atharva Borkar 
+Email: [atharva0068@gmail.com]  
+GitHub: [https://github.com/atharva6868]
