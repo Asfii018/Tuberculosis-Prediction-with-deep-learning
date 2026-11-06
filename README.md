@@ -1,5 +1,7 @@
 # Tuberculosis Detection from Chest X-ray Images using Deep Learning
 
+AI-powered tuberculosis detection from chest X-ray images using deep learning,
+including CNN, DenseNet121, and U-Net approaches.
 
 ---
 
