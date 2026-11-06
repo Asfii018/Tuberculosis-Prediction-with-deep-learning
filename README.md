@@ -1,9 +1,5 @@
 # Tuberculosis Detection from Chest X-ray Images using Deep Learning
 
-[![Research Project](https://img.shields.io/badge/Project-Research-blue)](#)
-[![Python](https://img.shields.io/badge/Python-3.13-blue)](#)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.13-blue)](#)
-[![License](https://img.shields.io/badge/License-Research-blue)](#)
 
 ---
 
@@ -27,7 +23,23 @@ The goal is to develop an accurate, explainable, and research-focused AI tool fo
 - `classification.py` — DenseNet121 model for TB detection, training with k-fold CV, early stopping, and evaluation.
 - `train.py` — Training orchestration, integrating segmentation and classification training workflows.
 - `utils.py` — Helper functions for visualization (including Grad-CAM), metrics, and data conversion.
-- `webapp/` — Modern Flask-based web UI with image upload, prediction visualization, and interactive results display.
+- `webapp/` — Legacy Flask prototype. Do not use for model inference: it has machine-specific checkpoint paths and does not apply the notebook's ROI to classification.
+- `backend/` — FastAPI inference API for the notebook's U-Net + DenseNet121 workflow.
+- `frontend/` — React/Vite research interface connected to the FastAPI readiness and prediction endpoints.
+
+## Model Artifact Requirement
+
+The notebook records training/evaluation output but does not embed trained model
+weights. Put the U-Net and DenseNet121 `.h5`/`.keras` files in `models/` or set
+their locations with `UNET_MODEL_PATH` and `DENSENET_MODEL_PATH` in
+`backend/.env`. See [backend setup](./backend/README.md) and
+[frontend setup](./frontend/README.md). Inference remains unavailable until
+both trained checkpoints are present; the API does not generate substitute
+predictions.
+
+The notebook reports U-Net fold 2 as its best validation fold but later loads
+fold 3 for inference. The new API defaults to fold 3 to match that inference
+cell. Verify the intended checkpoint before changing the configured path.
 
 ---
 
@@ -47,7 +59,6 @@ The goal is to develop an accurate, explainable, and research-focused AI tool fo
 
 1. Clone the repository:
 
-git clone https://github.com/atharvakanchan25/TB-Detection-DeepLearning.git
 
 2. Create and activate a Python virtual environment:
     bash - python -m venv venv
@@ -95,7 +106,3 @@ This project is provided for research purposes without warranty. Please read [LI
 ## Contact
 
 For questions or collaborations, please contact:
-
-Atharva Borkar 
-Email: [atharva0068@gmail.com]  
-GitHub: [https://github.com/atharva6868]
