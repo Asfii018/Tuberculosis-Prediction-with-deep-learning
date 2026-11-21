@@ -59,16 +59,22 @@ cell. Verify the intended checkpoint before changing the configured path.
 
 ## Installation
 
-1. Clone the repository:
+From the repository root, install the backend dependencies and frontend packages:
 
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+`cd ..\frontend`
+npm install
+npm run dev
+```
 
-2. Create and activate a Python virtual environment:
-    bash - python -m venv venv
-    Windows:
-    .\venv\Scripts\activate
-
-
-Use the web interface to upload chest X-ray images and view TB detection results with visual explanations.
+Run `npm run dev` from `frontend`, not `backend`. It starts both the FastAPI
+backend and the Vite frontend. To run only the API, use
+`python -m uvicorn app.main:app --reload` from `backend`. Predictions also
+require the trained model checkpoints described above.
 
 ---
 

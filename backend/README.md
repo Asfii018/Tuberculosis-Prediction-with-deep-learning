@@ -24,7 +24,7 @@ endpoints report the missing artifacts and predictions return HTTP 503.
 
 From the `backend` directory, create and activate a virtual environment,
 install requirements, copy `.env.example` to `.env`, set the checkpoint paths,
-then run:
+then start the API:
 
 ```powershell
 python -m pip install -r requirements.txt
@@ -36,10 +36,18 @@ Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
 
 ## Endpoints
 
-- `GET /health` — API process and model readiness.
-- `GET /api/models/status` — checkpoint availability.
+- `GET /health` — API reachability plus model load state, configured checkpoint
+  paths, missing files, and any load error.
+- `GET /api/models/status` — detailed checkpoint and initialization status.
 - `POST /api/predictions/upload` — PNG/JPG/JPEG upload; returns prediction,
-  segmentation mask, ROI, elapsed time, and timestamp.
+  segmentation mask, ROI, elapsed time, and timestamp. The multipart file
+  field is named `file`.
+
+The API starts even when checkpoints are missing or cannot be loaded so the
+health endpoint can report the cause. Prediction requests then return HTTP 503
+with the missing paths or model initialization error. Place the original
+trained checkpoints at the configured paths; the service never substitutes or
+re-trains models.
 
 The returned sigmoid value is labeled as an **uncalibrated score**, not a
 clinical probability or calibrated confidence. The service is for research

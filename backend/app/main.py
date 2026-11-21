@@ -36,9 +36,12 @@ app.include_router(predictions_router, prefix="/api")
 
 @app.get("/health")
 def health() -> dict[str, Any]:
+    model_status = model_service.status()
     return {
         "status": "ok",
-        "model_ready": model_service.ready,
+        "api_ready": True,
+        "model_ready": model_status["ready"],
+        "model": model_status,
     }
 
 

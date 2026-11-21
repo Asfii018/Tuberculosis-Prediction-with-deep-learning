@@ -1,4 +1,5 @@
 import io
+import logging
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +14,7 @@ from app.services.inference import model_service
 
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg"}
 ALLOWED_FORMATS = {"PNG", "JPEG"}
 
@@ -66,8 +68,10 @@ async def predict(file: UploadFile = File(...)) -> dict[str, Any]:
         raise HTTPException(
             status_code=503,
             detail={
-                "message": "Inference is unavailable until trained model files are installed.",
+                "message": status["error"]
+                or "Inference is unavailable until trained model files are installed.",
                 "missing_artifacts": status["missing_artifacts"],
+                "model_state": status["state"],
             },
         )
 
@@ -75,8 +79,12 @@ async def predict(file: UploadFile = File(...)) -> dict[str, Any]:
     started = time.perf_counter()
     try:
         result = model_service.predict(image_bgr)
-    except (RuntimeError, ValueError) as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Model inference failed for uploaded image %r.", file.filename)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Model inference failed: {type(exc).__name__}: {exc}",
+        ) from exc
 
     result["processing_time_ms"] = round(
         (time.perf_counter() - started) * 1000,
